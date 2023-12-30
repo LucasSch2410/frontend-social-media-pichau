@@ -10,7 +10,7 @@ const StateParamWrapper = () => {
   const access_token = searchParams.get('access_token');
 
   if (access_token) {
-    localStorage.setItem('access_token', access_token)
+    sessionStorage.setItem('access_token', access_token)
     return <Navigate to="/sheet" replace/>
   }
   return <App />
@@ -22,6 +22,8 @@ const router = createBrowserRouter([
       element: <StateParamWrapper />
   },
 ])
+
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
