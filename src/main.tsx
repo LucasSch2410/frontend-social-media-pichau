@@ -2,31 +2,23 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
-import { createBrowserRouter, RouterProvider, Navigate, useSearchParams } from "react-router-dom";
-import App from './pages/App';
-
-const StateParamWrapper = () => {
-  const [searchParams] = useSearchParams();
-  const access_token = searchParams.get('access_token');
-
-  if (access_token) {
-    sessionStorage.setItem('access_token', access_token)
-    return <Navigate to="/sheet" replace/>
-  }
-  return <App />
-};
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Login from './pages/Login';
+import Home from './pages/Home';
 
 const router = createBrowserRouter([
   {
       path: "/",
-      element: <StateParamWrapper />
+      element: <Login />
+  },  
+  {
+    path: "/home",
+    element: <Home />
   },
 ])
 
-
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  //<React.StrictMode>
+      <RouterProvider router={router} />
+  //</React.StrictMode>
 )
