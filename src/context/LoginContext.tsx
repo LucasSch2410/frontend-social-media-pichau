@@ -1,14 +1,18 @@
 import { createContext, useContext, useState} from "react"
-import { api } from "../services/api.js"
+import api from "../services/api"
 import { toast } from 'react-toastify'
 const AuthContext = createContext({})
 
-
+interface SignInData {
+    username: string;
+    password: string;
+}
+  
 function AuthProvider({ children } : any){
 
     const [data, setData] = useState({})
 
-    async function signIn({username, password}: string){
+    async function signIn({username, password}: SignInData){
 
         let formData = new FormData()
 

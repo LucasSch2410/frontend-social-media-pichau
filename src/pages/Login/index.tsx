@@ -4,8 +4,6 @@ import Button from '../../components/Button/Button'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { api } from '../../services/api'
-import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/LoginContext'
 

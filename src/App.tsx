@@ -1,6 +1,6 @@
-import { AuthProvider, useAuth } from './context/LoginContext';
+import { useAuth } from './context/LoginContext';
 import './index.css'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -30,7 +30,7 @@ const AppRoutes = createBrowserRouter([
   
 
 const App = () => {
-    const { user } = useAuth()
+    const { user : any} = useAuth()
 
     return (
         <>

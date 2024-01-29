@@ -1,7 +1,7 @@
 import pichauLogo from '../../assets/logo-pichau.png'
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
-import { api } from '../../services/api'
+import api from '../../services/api'
 import { toast } from 'react-toastify'
 import Button from '../../components/Button/Button'
 import { useAuth } from '../../context/LoginContext'
@@ -29,10 +29,10 @@ export default function Home() {
 
     async function requestSheet(data: FormData){
         await api.post('/images/sheet', data)
-        .then((res: Response) => {
-            setProducts(res.data.map(product => ({ ...product, loading: false })));
+        .then((res) => {
+            setProducts(res.data.map((product: Product) => ({ ...product, loading: false })));
         })
-        .catch((error: Response) => {
+        .catch((error) => {
             if (error.response){
             toast.error(error.response.data.detail)
             } else {
@@ -40,8 +40,6 @@ export default function Home() {
             console.log(error)
             }
         })
-
-
     }
 
     async function requestImages(typeSocial: string){
@@ -59,8 +57,6 @@ export default function Home() {
                         installment: product.installment,
                         typeSocial: typeSocial,
                         username: userData.user,
-                    })
-                    .then((res: any) => {
                     })
                     .catch((error: any) => {
                         if (error.response){
