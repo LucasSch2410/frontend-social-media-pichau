@@ -1,27 +1,41 @@
 import { createContext, useContext, useState} from "react"
 import api from "../services/api"
 import { toast } from 'react-toastify'
-const AuthContext = createContext({})
 
 interface SignInData {
     username: string;
     password: string;
 }
+
+interface UserData {
+    username: string;
+    id: string;
+    dropbox_token: string;
+}
+
+interface AuthContextProps {
+    signIn: (data: SignInData) => Promise<void>;
+    username: string;
+    id: string;
+    dropbox_token: string;
+}
   
-function AuthProvider({ children } : any){
+const AuthContext = createContext({} as AuthContextProps);
+  
 
-    const [data, setData] = useState({})
+function AuthProvider({ children }: any){
 
-    async function signIn({username, password}: SignInData){
+    const [data, setData] = useState<UserData>({ username: '', id: '', dropbox_token: '' });
 
-        let formData = new FormData()
+    async function signIn({ username, password }: SignInData){
+        let formData = new FormData();
 
-        formData.append('username', username)
-        formData.append('password', password)
+        formData.append('username', username);
+        formData.append('password', password);
 
         const config = {
             headers: { 'content-type': 'multipart/form-data'}
-        }
+        };
 
         try{
             const response = await api.post("/login", formData, config)
@@ -31,7 +45,7 @@ function AuthProvider({ children } : any){
 
             setData({username, dropbox_token, id})
         }
-        catch (error){
+        catch (error: any){
             if (error.response){
                 toast.error(error.response.data.detail)
             } else {
@@ -41,7 +55,7 @@ function AuthProvider({ children } : any){
     }
 
     return(
-        <AuthContext.Provider value={{signIn, user: data.username, id: data.id, dropbox_token: data.dropbox_token}}>
+        <AuthContext.Provider value={{signIn, username: data.username, id: data.id, dropbox_token: data.dropbox_token}}>
             { children }
         </AuthContext.Provider>
     )

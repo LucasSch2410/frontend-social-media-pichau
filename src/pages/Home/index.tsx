@@ -22,10 +22,10 @@ type FormData = {
 export default function Home() {
 
     const [products, setProducts] = useState<Product[] | null>(null)
-    const [userData, setData] = useState<ReturnType<typeof useAuth>>(useAuth())
-    const [typeSocialDownload, setTypeSocial] = useState()
+    const [userData] = useState<ReturnType<typeof useAuth>>(useAuth())
+    const [typeSocialDownload, setTypeSocial] = useState('')
     const [downloadReady, setDownload] = useState(false)
-    const { register, handleSubmit, formState: { errors }} = useForm<FormData>()
+    const { register, handleSubmit} = useForm<FormData>()
 
     async function requestSheet(data: FormData){
         await api.post('/images/sheet', data)
@@ -45,7 +45,7 @@ export default function Home() {
     async function requestImages(typeSocial: string){
         try{
             await Promise.all(
-                products.map(async (product) => {
+                products!.map(async (product) => {
                     setProducts((current: any) =>
                         current.map((product: any) => ({ ...product, loading: true }))
                     );
@@ -56,7 +56,7 @@ export default function Home() {
                         price: product.price,
                         installment: product.installment,
                         typeSocial: typeSocial,
-                        username: userData.user,
+                        username: userData.username,
                     })
                     .catch((error: any) => {
                         if (error.response){
@@ -87,7 +87,7 @@ export default function Home() {
 
     async function requestDownload(){
         await api.post('/images/download', {
-            username: userData.user,
+            username: userData.username,
             typeSocial: typeSocialDownload
         })
         .then(res => {
@@ -116,7 +116,6 @@ export default function Home() {
                         className='border border-zinc-800 shadow-sm rounded h-10 px-3 bg-zinc-900 text-white'
                         {...register('sheet_url')}
                         />
-                        {errors.password && <span>{errors.password.message}</span>}
                     </div>
                     <div className="card m-auto">
                         <Button>Requisitar produtos</Button>

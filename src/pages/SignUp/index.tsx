@@ -1,10 +1,9 @@
-import { useState } from 'react'
 import pichauLogo from '../../assets/logo-pichau.png'
 import Button from '../../components/Button/Button'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { api } from '../../services/api'
+import api from '../../services/api'
 import { toast } from 'react-toastify'
 import { useNavigate, Link } from 'react-router-dom'
 
@@ -18,7 +17,6 @@ const createUserFormSchema = z.object({
 type CreateUserFormData = z.infer<typeof createUserFormSchema>
 
   export default function App() {
-    const [output, setOutput] = useState('')
     const { register, handleSubmit, formState: { errors } } = useForm<CreateUserFormData>({
       resolver: zodResolver(createUserFormSchema),
     })

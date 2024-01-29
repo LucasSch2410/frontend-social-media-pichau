@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import pichauLogo from '../../assets/logo-pichau.png'
 import Button from '../../components/Button/Button'
 import { z } from 'zod'
@@ -17,8 +16,6 @@ const createUserFormSchema = z.object({
 type CreateUserFormData = z.infer<typeof createUserFormSchema>
 
   export default function App() {
-
-    const [output, setOutput] = useState('')
     const { register, handleSubmit, formState: { errors } } = useForm<CreateUserFormData>({
       resolver: zodResolver(createUserFormSchema),
     })

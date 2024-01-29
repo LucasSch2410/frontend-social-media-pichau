@@ -30,12 +30,12 @@ const AppRoutes = createBrowserRouter([
   
 
 const App = () => {
-    const { user : any} = useAuth()
+    const user = useAuth()
 
     return (
         <>
             <ToastContainer />
-            {user ? <RouterProvider router={AppRoutes} /> : <RouterProvider router={AuthRoutes} />}
+            {user.username ? <RouterProvider router={AppRoutes} /> : <RouterProvider router={AuthRoutes} />}
         </>
     )
 }
