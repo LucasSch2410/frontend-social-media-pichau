@@ -26,7 +26,6 @@ function AuthProvider({ children } : any){
             api.defaults.headers.authorization = `Bearer ${access_token}`
 
             setData({username, dropbox_token, id})
-
         }
         catch (error){
             if (error.response){
@@ -38,7 +37,7 @@ function AuthProvider({ children } : any){
     }
 
     return(
-        <AuthContext.Provider value={{signIn, user: data.username}}>
+        <AuthContext.Provider value={{signIn, user: data.username, id: data.id, dropbox_token: data.dropbox_token}}>
             { children }
         </AuthContext.Provider>
     )
