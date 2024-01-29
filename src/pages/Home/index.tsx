@@ -27,6 +27,14 @@ export default function Home() {
     const [downloadReady, setDownload] = useState(false)
     const { register, handleSubmit} = useForm<FormData>()
 
+    const updateProductState = (key: string, updates: any) => {
+        setProducts((current: any) =>
+            current.map((p: any) =>
+                p.key === key ? { ...p, ...updates } : p
+            )
+        );
+    };
+    
     async function requestSheet(data: FormData){
         await api.post('/images/sheet', data)
         .then((res) => {
@@ -44,38 +52,30 @@ export default function Home() {
 
     async function requestImages(typeSocial: string){
         try{
-            await Promise.all(
-                products!.map(async (product) => {
-                    setProducts((current: any) =>
-                        current.map((product: any) => ({ ...product, loading: true }))
-                    );
-        
-                    await api.post('/images/create', {
-                        access_token: userData.dropbox_token,
-                        product_name: product.product,
-                        price: product.price,
-                        installment: product.installment,
-                        typeSocial: typeSocial,
-                        username: userData.username,
-                    })
-                    .catch((error: any) => {
-                        if (error.response){
-                            toast.error(`Não foi possível baixar a imagem: ${product.product}`)
-                            toast.error(error.response.data.detail)
-                        } else {
-                            toast.error(`Não foi possível baixar a imagem: ${product.product}`)
-                            console.log(error)
-                        }
-                    })
-                    .finally(() => {
-                        setProducts((current: any) =>
-                        current.map((p: any) =>
-                          p.key === product.key ? { ...p, loading: false } : p
-                        )
-                      )
-                    });
+            for (const product of products!){
+                updateProductState(product.key, { loading: true });
+
+                await api.post('/images/create', {
+                    access_token: userData.dropbox_token,
+                    product_name: product.product,
+                    price: product.price,
+                    installment: product.installment,
+                    typeSocial: typeSocial,
+                    username: userData.username,
                 })
-            )
+                .catch((error: any) => {
+                    if (error.response){
+                        toast.error(`Não foi possível baixar a imagem: ${product.product}`)
+                        toast.error(error.response.data.detail)
+                    } else {
+                        toast.error(`Não foi possível baixar a imagem: ${product.product}`)
+                        console.log(error)
+                    }
+                })
+                .finally(() => {
+                    updateProductState(product.key, { loading: false });
+                });
+            }
         } catch (error: any){
             toast.error(error.response.data.detail)
         } finally {
