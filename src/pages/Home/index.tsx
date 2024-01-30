@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import api from '../../services/api'
+import { api } from '../../services/api'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import Button from '../../components/Button/Button'
@@ -24,6 +24,9 @@ export default function Home() {
     const [buttonLoading, setButtonLoading] = useState(false)
     const [downloadLoading, setDownloadLoading] = useState(false)
     const [imagesLoading, setImageLoading] = useState(false)
+
+    const [timePreview, setPreview] = useState(0)
+    const [counterProductDownload, setProductDownload] = useState(0)
 
     const [products, setProducts] = useState<Product[] | null>(null)
     const [userData] = useState<ReturnType<typeof useAuth>>(useAuth())
@@ -74,6 +77,7 @@ export default function Home() {
         try {
             for (const product of products!) {
                 updateProductState(product.key, { loading: true });
+                const start: any = new Date()
 
                 await api.post('/images/create', {
                     access_token: userData.dropbox_token,
@@ -94,6 +98,10 @@ export default function Home() {
                     })
                     .finally(() => {
                         updateProductState(product.key, { loading: false });
+                        setProductDownload(current => current + 1)
+
+                        const timeTake = (new Date()) - start;
+                        setPreview(current => current + timeTake)
                     });
             }
         } finally {
@@ -177,21 +185,35 @@ export default function Home() {
                 <div className='grid grid-cols-2 w-5/6 col-start-9 col-span-4 gap-6 row-start-8 box-border'>
                     {imagesLoading ? (
                         <>
-                            <Button className='h-16 col-span-1 cursor-not-allowed border-none' disabled>Stories</Button>
-                            <Button className='h-16 col-span-1 cursor-not-allowed border-none' disabled>Wide</Button>
-                            <Button className='h-16 col-span-1 cursor-not-allowed border-none' disabled>Push</Button>
-                            <Button className='h-16 col-span-1 cursor-not-allowed border-none' disabled>Post</Button>
+                            <>
+                                <Button className='h-16 col-span-1 cursor-not-allowed border-none' disabled>Stories</Button>
+                                <Button className='h-16 col-span-1 cursor-not-allowed border-none' disabled>Wide</Button>
+                                <Button className='h-16 col-span-1 cursor-not-allowed border-none' disabled>Push</Button>
+                                <Button className='h-16 col-span-1 cursor-not-allowed border-none' disabled>Post</Button>
+                            </>
+                            <>
+                                <Button className='h-16 col-span-2 cursor-not-allowed border-none' disabled>Todas</Button>
+                            </>
                         </>
 
                     ) : (
                         <>
-                            <Button className='h-16 col-span-1' onClick={() => requestImages('stories')}>Stories</Button>
-                            <Button className='h-16 col-span-1' onClick={() => requestImages('wide')}>Wide</Button>
-                            <Button className='h-16 col-span-1' onClick={() => requestImages('push')}>Push</Button>
-                            <Button className='h-16 col-span-1' onClick={() => requestImages('post')}>Post</Button>
+                            <>
+                                <Button className='h-16 col-span-1' onClick={() => requestImages('stories')}>Stories</Button>
+                                <Button className='h-16 col-span-1' onClick={() => requestImages('wide')}>Wide</Button>
+                                <Button className='h-16 col-span-1' onClick={() => requestImages('push')}>Push</Button>
+                                <Button className='h-16 col-span-1' onClick={() => requestImages('post')}>Post</Button>
+                            </>
+                            <>
+                                <Button className='h-16 col-span-2' onClick={() => requestImages('stories')}>Todas</Button>
+                            </>
                         </>
                     )}
-
+                    {timePreview > 1 &&(
+                        <div className='col-span-2'>
+                            <p>Tempo restante previsto: {Math.round((((timePreview / counterProductDownload) * products!.length) - timePreview) / 1000)} segundos </p>
+                        </div>
+                    )}
                 </div>
                 : ""}
 

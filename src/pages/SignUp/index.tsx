@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { useState } from 'react'
-import api from '../../services/api'
+import { api } from '../../services/api'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { ThreeDots } from 'react-loader-spinner'
@@ -10,10 +10,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import pichauLogo from '../../assets/logo-pichau.png'
 
 const createUserFormSchema = z.object({
-
     username: z.string().min(1, "O usuário é obrigatório!"),
     password: z.string().min(1, "A senha é obrigatória!")
-
 })
 
 type CreateUserFormData = z.infer<typeof createUserFormSchema>

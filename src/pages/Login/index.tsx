@@ -1,12 +1,11 @@
 import { z } from 'zod'
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { ThreeDots } from 'react-loader-spinner'
 import Button from '../../components/Button/Button'
-import { useAuth } from '../../context/LoginContext'
 import pichauLogo from '../../assets/logo-pichau.png'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useGlobalContext } from '../../context/GlobalContext'
 
 const createUserFormSchema = z.object({
 
@@ -22,19 +21,9 @@ type CreateUserFormData = z.infer<typeof createUserFormSchema>
       resolver: zodResolver(createUserFormSchema),
     })
 
-    const { signIn } = useAuth()
-    const [buttonLoading, setButtonLoading] = useState(false)
+    const { submitLogin, buttonLoading, setButtonLoading } = useGlobalContext();
 
-    async function handleLogin(data: any){
-        setButtonLoading(true)
-
-        try{
-            await signIn(data)
-        }
-        finally {
-            setButtonLoading(false)
-        }
-    }
+    const handleForm = handleSubmit((data) => submitLogin(data));
 
     return (
       <main className='h-screen bg-zinc-950 text-zinc-300 flex flex-col items-center justify-center'>
@@ -44,7 +33,7 @@ type CreateUserFormData = z.infer<typeof createUserFormSchema>
         <h1 className='text-white text-center py-8 text-5xl'>Login</h1>
 
         <form 
-          onSubmit={handleSubmit(handleLogin)}
+          onSubmit={handleForm}
           className='flex flex-col gap-4 w-full max-w-xs'
         >
           <div className='flex flex-col gap-1'>
