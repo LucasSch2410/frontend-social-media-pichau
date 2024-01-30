@@ -1,10 +1,12 @@
-import pichauLogo from '../../assets/logo-pichau.png'
-import Button from '../../components/Button/Button'
 import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { ThreeDots } from 'react-loader-spinner'
+import Button from '../../components/Button/Button'
 import { useAuth } from '../../context/LoginContext'
+import pichauLogo from '../../assets/logo-pichau.png'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const createUserFormSchema = z.object({
 
@@ -21,9 +23,17 @@ type CreateUserFormData = z.infer<typeof createUserFormSchema>
     })
 
     const { signIn } = useAuth()
+    const [buttonLoading, setButtonLoading] = useState(false)
 
     async function handleLogin(data: any){
-      signIn(data)
+        setButtonLoading(true)
+
+        try{
+            await signIn(data)
+        }
+        finally {
+            setButtonLoading(false)
+        }
     }
 
     return (
@@ -57,7 +67,11 @@ type CreateUserFormData = z.infer<typeof createUserFormSchema>
             {errors.password && <span>{errors.password.message}</span>}
           </div>
           <div className="card m-auto">
-            <Button>Entrar</Button>
+            {buttonLoading ? (
+                <Button className='w-40 flex justify-center border-none cursor-not-allowed' disabled><ThreeDots height={35}/></Button>
+            ) : (
+                <Button className='w-40'>Entrar</Button>
+            )}
           </div>
           <div className='text-white'>
             <Link to="/signup">Registrar-se</Link>
