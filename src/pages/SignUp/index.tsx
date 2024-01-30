@@ -84,7 +84,7 @@ export default function App() {
                 </div>
                 <div className="card m-auto">
                     {buttonLoading ? (
-                        <Button className='w-60 flex justify-center border-none cursor-not-allowed' disabled><ThreeDots height={35} /></Button>
+                        <Button className='w-60 flex justify-center border-none cursor-not-allowed bg-white' disabled><ThreeDots color='#000000' height={35} /></Button>
                     ) : (
                         <Button className='w-60'>Registrar-se</Button>
                     )}

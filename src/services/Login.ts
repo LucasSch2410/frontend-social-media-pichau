@@ -19,7 +19,7 @@ export const Login = async (userLogin: iLogin): Promise<iDataLogin> => {
     formData.append('password', userLogin.password);
 
     const config = {
-        headers: { 'content-type': 'multipart/form-data'}
+        headers: { 'content-type': 'multipart/form-data' }
     };
 
     const { data } = await api.post<iDataLogin>("/login", userLogin, config);

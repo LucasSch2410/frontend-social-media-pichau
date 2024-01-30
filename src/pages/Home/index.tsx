@@ -3,9 +3,9 @@ import { api } from '../../services/api'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import Button from '../../components/Button/Button'
-import { useAuth } from '../../context/LoginContext'
 import pichauLogo from '../../assets/logo-pichau.png'
 import { TailSpin, ThreeDots } from 'react-loader-spinner';
+import { useGlobalContext } from '../../context/GlobalContext'
 
 type Product = {
     key: string;
@@ -19,17 +19,20 @@ type FormData = {
     sheet_url: string;
 };
 
-export default function Home() {
 
-    const [buttonLoading, setButtonLoading] = useState(false)
-    const [downloadLoading, setDownloadLoading] = useState(false)
-    const [imagesLoading, setImageLoading] = useState(false)
+export const Home = () => {
 
+    const {
+        user,
+        dbxToken,
+        sheetLoading, 
+        setSheetLoading
+    } = useGlobalContext();
     const [timePreview, setPreview] = useState(0)
     const [counterProductDownload, setProductDownload] = useState(0)
 
     const [products, setProducts] = useState<Product[] | null>(null)
-    const [userData] = useState<ReturnType<typeof useAuth>>(useAuth())
+
     const [typeSocialDownload, setTypeSocial] = useState('')
     const [downloadReady, setDownload] = useState(false)
     const { register, handleSubmit } = useForm<FormData>()
@@ -44,7 +47,7 @@ export default function Home() {
 
     async function requestSheet(data: FormData) {
 
-        setButtonLoading(true)
+        setSheetLoading({...sheetLoading, button: true})
         try {
             await api.post('/images/sheet', data)
                 .then((res) => {
@@ -66,26 +69,26 @@ export default function Home() {
                 console.log(error)
             }
         } finally {
-            setButtonLoading(false)
+            setSheetLoading({...sheetLoading, button: false})
         }
 
     }
 
     async function requestImages(typeSocial: string) {
-        setImageLoading(true)
+        setSheetLoading({...sheetLoading, images: true})
 
         try {
             for (const product of products!) {
                 updateProductState(product.key, { loading: true });
-                const start: any = new Date()
+                const start: number = new Date().getTime()
 
                 await api.post('/images/create', {
-                    access_token: userData.dropbox_token,
+                    access_token: dbxToken,
                     product_name: product.product,
                     price: product.price,
                     installment: product.installment,
                     typeSocial: typeSocial,
-                    username: userData.username,
+                    username: user?.username,
                 })
                     .catch((error: any) => {
                         if (error.response) {
@@ -100,7 +103,7 @@ export default function Home() {
                         updateProductState(product.key, { loading: false });
                         setProductDownload(current => current + 1)
 
-                        const timeTake = (new Date()) - start;
+                        const timeTake = (new Date().getTime()) - start;
                         setPreview(current => current + timeTake)
                     });
             }
@@ -108,15 +111,17 @@ export default function Home() {
             toast.success(`Imagens do tipo ${typeSocial} foram produzidas, download disponível.`)
             setTypeSocial(typeSocial)
             setDownload(true)
-            setImageLoading(false)
+            setSheetLoading({...sheetLoading, images: false})
+            setPreview(0)
+            setProductDownload(0)
         }
     }
 
     async function requestDownload() {
-        setDownloadLoading(true)
+        setSheetLoading({...sheetLoading, download: true})
         try {
             await api.post('/images/download', {
-                username: userData.username,
+                username: user?.username,
                 typeSocial: typeSocialDownload
             })
                 .then(res => {
@@ -131,7 +136,8 @@ export default function Home() {
                 console.log(error)
             }
         } finally {
-            setDownloadLoading(false)
+            setSheetLoading({...sheetLoading, download: false})
+            setDownload(false)
         }
     }
 
@@ -157,8 +163,8 @@ export default function Home() {
                         />
                     </div>
                     <div className="card m-auto">
-                        {buttonLoading ? (
-                            <Button className='w-80 flex justify-center border-none cursor-not-allowed' disabled><ThreeDots height={35} /></Button>
+                        {sheetLoading.button ? (
+                            <Button className='w-80 flex justify-center border-none cursor-not-allowed bg-white' disabled><ThreeDots color='#000000' height={35} /></Button>
                         ) : (
                             <Button className='w-80'>Requisitar produtos</Button>
                         )}
@@ -168,12 +174,12 @@ export default function Home() {
 
             {products ? <div className='
                     col-start-9 col-span-4 row-start-1 row-span-6
-                  bg-neutral-900 mt-20 h-5/6 w-5/6 p-5 rounded border-white border-2 overflow-auto '>{
+                  bg-neutral-900 mt-20 h-5/6 w-5/6 p-5 rounded overflow-auto border-r-0'>{
                     products.map((product) =>
-                        <div key={product.key} className='pb-10'>
-                            <p>{product.product}</p>
+                        <div key={product.key} className='pb-10 flex'>
+                            <p className='w-5/6 text-justify'>{product.product}</p>
                             {product.loading && (
-                                <TailSpin />
+                                <TailSpin height={30} strokeWidth={7} color='#FFFFFF'/>
                             )}
                         </div>
                     )
@@ -183,7 +189,7 @@ export default function Home() {
 
             {products ?
                 <div className='grid grid-cols-2 w-5/6 col-start-9 col-span-4 gap-6 row-start-8 box-border'>
-                    {imagesLoading ? (
+                    {sheetLoading.images ? (
                         <>
                             <>
                                 <Button className='h-16 col-span-1 cursor-not-allowed border-none' disabled>Stories</Button>
@@ -217,9 +223,9 @@ export default function Home() {
                 </div>
                 : ""}
 
-            {downloadReady && imagesLoading === false &&(
+            {downloadReady && sheetLoading.images === false &&(
                 <div className='flex justify-center col-start-5 col-span-4 row-start-11'>
-                    {downloadLoading ? (
+                    {sheetLoading.download ? (
                         <Button disabled className='flex justify-center items-center w-2/6 bg-white cursor-not-allowed'>
                             <ThreeDots color='#000000' />
                         </Button>
