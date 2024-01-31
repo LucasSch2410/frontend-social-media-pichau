@@ -1,6 +1,5 @@
 import React, {
     ReactNode,
-    useEffect,
     useState,
     createContext,
     useContext,
@@ -16,13 +15,11 @@ interface iGlobalContext {
     setUser: React.Dispatch<React.SetStateAction<iUser | null>>;
     dbxToken: string | null;
     setDbxToken: React.Dispatch<React.SetStateAction<string>>;
-    loading: boolean;
-    buttonLoading: boolean;
-    setButtonLoading: React.Dispatch<React.SetStateAction<boolean>>;
     sheetLoading: iSheetLoading;
     setSheetLoading: React.Dispatch<React.SetStateAction<iSheetLoading>>;
-    clearStorage: () => void;
     submitLogin({ username, password }: iLogin): void;
+    buttonLoading: boolean;
+    setButtonLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface iSheetLoading {
@@ -40,43 +37,15 @@ export interface iUser {
     username: string;
 }
 
-export const GlobalContext = createContext<iGlobalContext>(
-    {} as iGlobalContext
-);
+export const GlobalContext = createContext<iGlobalContext>({} as iGlobalContext);
 
 export const GlobalProvider = ({ children }: iGlobalContextProps) => {
     const [user, setUser] = useState<iUser | null>(null);
     const [dbxToken, setDbxToken] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [buttonLoading, setButtonLoading] = useState(false);
     const [sheetLoading, setSheetLoading] = useState<iSheetLoading>({button: false, download:false, images: false});
+    const [buttonLoading, setButtonLoading] = useState(false);
+    
     const navigate = useNavigate()
-
-    useEffect(() => {
-        async function loadUser() {
-            const id = localStorage.getItem("@id");
-            const token = localStorage.getItem("@token");
-            if (id && token) {
-                try {
-                    setLoading(true);
-                    api.defaults.headers.common.authorization = `Bearer ${token}`;
-                    const { data } = await api.get<iUser>(`/users/${id}`);
-                    setUser(data);
-                } catch (error) {
-                    console.error(error);
-                    clearStorage();
-                } finally {
-                    setLoading(false);
-                }
-            }
-        }
-        loadUser();
-    });
-
-    const clearStorage = () => {
-        localStorage.clear()
-        setUser(null);
-    };
 
     const submitLogin = async ({ username, password }: iLogin) => {
         const userLogin = { username, password };
@@ -105,12 +74,10 @@ export const GlobalProvider = ({ children }: iGlobalContextProps) => {
                 setUser,
                 dbxToken,
                 setDbxToken,
-                loading,
                 buttonLoading,
                 setButtonLoading,
                 sheetLoading,
                 setSheetLoading,
-                clearStorage,
                 submitLogin,
             }}
         >
