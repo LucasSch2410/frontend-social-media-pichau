@@ -6,9 +6,9 @@ import React, {
 } from "react";
 
 import { api } from "../services/api";
-import { toast } from "react-toastify";
 import { iLogin, Login } from "../services/Login";
 import { useNavigate } from "react-router-dom";
+import handleApiError from '../components/Error/handleApiError'
 
 interface iGlobalContext {
     user: iUser | null;
@@ -59,9 +59,8 @@ export const GlobalProvider = ({ children }: iGlobalContextProps) => {
             api.defaults.headers.common.authorization = `Bearer ${data.access_token}`;
 
             navigate("/home")
-        } catch (error) {
-            toast.error("Usuário inválido!");
-            console.log(error)
+        } catch (error: any) {
+            handleApiError(error, "Não foi possível entrar!")
         } finally {
             setButtonLoading(false);
         }

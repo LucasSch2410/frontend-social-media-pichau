@@ -4,21 +4,18 @@ import { api } from '../../services/api'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { ThreeDots } from 'react-loader-spinner'
+import { registerUserFormSchema } from './schema'
 import Button from '../../components/Button/Button'
 import { useNavigate, Link } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import pichauLogo from '../../assets/logo-pichau.png'
+import handleApiError from '../../components/Error/handleApiError'
 
-const createUserFormSchema = z.object({
-    username: z.string().min(1, "O usuário é obrigatório!"),
-    password: z.string().min(1, "A senha é obrigatória!")
-})
-
-type CreateUserFormData = z.infer<typeof createUserFormSchema>
+type CreateUserFormData = z.infer<typeof registerUserFormSchema>
 
 export default function App() {
     const { register, handleSubmit, formState: { errors } } = useForm<CreateUserFormData>({
-        resolver: zodResolver(createUserFormSchema),
+        resolver: zodResolver(registerUserFormSchema),
     })
 
     const [buttonLoading, setButtonLoading] = useState(false)
@@ -27,26 +24,12 @@ export default function App() {
 
     async function createUser(data: any) {
         setButtonLoading(true)
-
         try{
             await api.post('/users/create', data)
-            .then(() => {
-                toast.success('Usuário criado.')
-                navigate("/")
-            })
-            .catch((error) => {
-                if (error.response) {
-                    toast.error(error.response.data.detail)
-                } else {
-                    toast.error('Não foi possível cadastrar.')
-                }
-            })
+            toast.success('Usuário criado.')
+            navigate("/")
         } catch (error: any) {
-            if (error.response) {
-                toast.error(error.response.data.detail)
-            } else {
-                toast.error('Não foi possível cadastrar.')
-            }
+            handleApiError(error, "Não foi possível completar o seu cadastro.")
         } finally {
             setButtonLoading(false)
         }
@@ -82,7 +65,7 @@ export default function App() {
                     />
                     {errors.password && <span>{errors.password.message}</span>}
                 </div>
-                <div className="card m-auto">
+                <div className="my-5 card m-auto">
                     {buttonLoading ? (
                         <Button className='w-60 flex justify-center border-none cursor-not-allowed bg-white' disabled><ThreeDots color='#000000' height={35} /></Button>
                     ) : (

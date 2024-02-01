@@ -8,7 +8,6 @@ import pichauLogo from '../../assets/logo-pichau.png'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useGlobalContext } from '../../context/GlobalContext'
 
-
 type CreateUserFormData = z.infer<typeof loginUserFormSchema>
 
 export default function App() {
@@ -50,7 +49,8 @@ export default function App() {
                     />
                     {errors.password && <span>{errors.password.message}</span>}
                 </div>
-                <div className="card m-auto">
+
+                <div className="my-5 card m-auto">
                     {buttonLoading ? (
                         <Button className='w-40 flex justify-center border-none cursor-not-allowed bg-white' disabled><ThreeDots color='#000000' height={35} /></Button>
                     ) : (
