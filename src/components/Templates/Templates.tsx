@@ -37,10 +37,12 @@ export default function Templates() {
                 await api.put(`/images/templates/upload/${value.name}`, formData)
                 .then(() => {
                     toast.success(`Template ${value.name} alterado!`)
+                })
+                .catch((error: any) => (handleApiError(error, `Erro ao trocar o template ${value.name}.`)))
+                .finally(() => {
                     setUrl((prevUrl) => ({...prevUrl, [value.name]: null}))
                     setFile((prevFile) => ({...prevFile, [value.name]: null}))
                 })
-                .catch((error: any) => (handleApiError(error, `Erro ao trocar o template ${value.name}.`)))
             }
         }
     }
