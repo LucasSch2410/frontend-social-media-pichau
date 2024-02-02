@@ -7,6 +7,7 @@ import pichauLogo from '../../assets/logo-pichau.png'
 import { TailSpin, ThreeDots } from 'react-loader-spinner';
 import { useGlobalContext } from '../../context/GlobalContext'
 import handleApiError from '../../components/Error/handleApiError'
+import Templates from '../../components/Templates/Templates'
 
 type Product = {
     key: string;
@@ -46,7 +47,6 @@ export const Home = () => {
             )
         );
     };
-
 
     async function requestSheet(data: FormData) {
         setSheetLoading({ ...sheetLoading, button: true })
@@ -180,6 +180,11 @@ export const Home = () => {
 
     return (
         <main className='h-full min-h-screen lg:h-screen bg-zinc-950 text-zinc-300 lg:grid lg:grid-cols-12 lg:grid-rows-12'>
+
+            <Templates/>
+            
+
+
             <div className='flex flex-col items-center justify-center
                 pt-10 lg:pt-0 lg:col-start-5 lg:col-span-4 lg:row-start-4 lg:row-span-6'>
                 <div>
