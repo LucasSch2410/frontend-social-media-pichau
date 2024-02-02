@@ -200,7 +200,9 @@ export const Home = () => {
                     </div>
                     <div className="card m-auto">
                         {sheetLoading.button ? (
-                            <Button className='w-80 flex justify-center border-none cursor-not-allowed bg-white' disabled><ThreeDots color='#000000' height={35} /></Button>
+                            <Button className='w-80 flex justify-center border-none cursor-not-allowed bg-white' disabled>
+                                <ThreeDots color='#000000' height={35} />
+                            </Button>
                         ) : (
                             <Button className='w-80'>Requisitar produtos</Button>
                         )}
@@ -257,13 +259,13 @@ export const Home = () => {
                     )}
                 </div>
                     : "" }
+
             {downloadReady && sheetLoading.images === false &&(
                 <div className='flex justify-center col-start-5 col-span-4 row-start-11'>
                     {sheetLoading.download ? (
                         <Button disabled className='flex justify-center items-center w-2/6 bg-white cursor-not-allowed'>
                             <ThreeDots color='#000000' />
                         </Button>
-
                     ) : (
                         <Button className='w-2/6 bg-white text-black hover:bg-neutral-900 hover:text-white'
                             onClick={() => requestDownload()}>
