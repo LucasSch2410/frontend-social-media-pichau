@@ -26,7 +26,7 @@ export const Home = () => {
     const {
         user,
         dbxToken,
-        sheetLoading, 
+        sheetLoading,
         setSheetLoading
     } = useGlobalContext();
     const [timePreview, setPreview] = useState(0)
@@ -49,7 +49,7 @@ export const Home = () => {
 
 
     async function requestSheet(data: FormData) {
-        setSheetLoading({...sheetLoading, button: true})
+        setSheetLoading({ ...sheetLoading, button: true })
 
         try {
             await api.post('/images/sheet', data)
@@ -59,13 +59,13 @@ export const Home = () => {
         } catch (error: any) {
             handleApiError(error, "Não foi possível acessar a planilha.")
         } finally {
-            setSheetLoading({...sheetLoading, button: false})
+            setSheetLoading({ ...sheetLoading, button: false })
         }
     }
 
 
     async function requestImages(typeSocial: string) {
-        setSheetLoading({...sheetLoading, images: true})
+        setSheetLoading({ ...sheetLoading, images: true })
 
         try {
             for (const product of products!) {
@@ -90,12 +90,12 @@ export const Home = () => {
                         const timeTake = (new Date().getTime()) - start;
                         setPreview(current => current + timeTake)
                     });
-            } 
+            }
         } finally {
             toast.success(`As imagens foram produzidas, download disponível.`)
             setTypeSocial(typeSocial)
             setDownload(true)
-            setSheetLoading({...sheetLoading, images: false})
+            setSheetLoading({ ...sheetLoading, images: false })
             setPreview(0)
             setProductDownload(0)
         }
@@ -103,7 +103,7 @@ export const Home = () => {
 
 
     async function requestAllImages() {
-        setSheetLoading({...sheetLoading, images: true})
+        setSheetLoading({ ...sheetLoading, images: true })
 
         try {
             for (const product of products!) {
@@ -130,12 +130,12 @@ export const Home = () => {
 
                 const timeTake = (new Date().getTime()) - start;
                 setPreview(current => current + timeTake)
-            } 
+            }
         } finally {
             toast.success(`As imagens foram produzidas, download disponível.`)
             setTypeSocial('all')
             setDownload(true)
-            setSheetLoading({...sheetLoading, images: false})
+            setSheetLoading({ ...sheetLoading, images: false })
             setPreview(0)
             setProductDownload(0)
         }
@@ -143,7 +143,7 @@ export const Home = () => {
 
 
     async function requestDownload() {
-        setSheetLoading({...sheetLoading, download: true})
+        setSheetLoading({ ...sheetLoading, download: true })
 
         if (typeSocialDownload == 'all') {
             for (const typeSocial of socialTypes) {
@@ -173,7 +173,7 @@ export const Home = () => {
             }
         }
 
-        setSheetLoading({...sheetLoading, download: false})
+        setSheetLoading({ ...sheetLoading, download: false })
         setDownload(false)
 
     }
@@ -216,13 +216,13 @@ export const Home = () => {
                         <div key={product.key} className='pb-10 flex'>
                             <p className='w-5/6 text-justify'>{product.product}</p>
                             {product.loading && (
-                                <TailSpin height={30} strokeWidth={7} color='#FFFFFF'/>
+                                <TailSpin height={30} strokeWidth={7} color='#FFFFFF' />
                             )}
                         </div>
                     )
                 }
             </div>
-                : "" }
+                : ""}
 
             {products ?
                 <div className='m-auto py-20 lg:py-0 grid grid-cols-2 w-5/6 lg:col-start-9 lg:col-span-4 gap-6 lg:row-start-8 box-border'>
@@ -252,15 +252,15 @@ export const Home = () => {
                             </>
                         </>
                     )}
-                    {timePreview > 1 &&(
+                    {timePreview > 1 && (
                         <div className='col-span-2'>
                             <p>Tempo restante previsto: {Math.round((((timePreview / counterProductDownload) * products!.length) - timePreview) / 1000)} segundos </p>
                         </div>
                     )}
                 </div>
-                    : "" }
+                : ""}
 
-            {downloadReady && sheetLoading.images === false &&(
+            {downloadReady && sheetLoading.images === false && (
                 <div className='flex justify-center col-start-5 col-span-4 row-start-11'>
                     {sheetLoading.download ? (
                         <Button disabled className='flex justify-center items-center w-2/6 bg-white cursor-not-allowed'>
