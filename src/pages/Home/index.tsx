@@ -7,7 +7,7 @@ import pichauLogo from '../../assets/logo-pichau.png'
 import { TailSpin, ThreeDots } from 'react-loader-spinner';
 import { useGlobalContext } from '../../context/GlobalContext'
 import handleApiError from '../../components/Error/handleApiError'
-import Templates from '../../components/Templates/Templates'
+import Templates from '../../components/Templates'
 
 type Product = {
     key: string;

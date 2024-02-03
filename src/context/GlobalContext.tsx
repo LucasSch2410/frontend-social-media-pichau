@@ -53,17 +53,14 @@ export const GlobalProvider = ({ children }: iGlobalContextProps) => {
     const navigate = useNavigate()
 
     useEffect(() => {
-
         async function load(){
-
             const token = Cookies.get('jwt_token')
             const dbx_token = Cookies.get('dbx_token')
             const user_id = Cookies.get('user_id')
 
-            if (token) {
+            if (token && dbx_token) {
                 try {
                     setPageLoading(true)
-                    setUser(undefined)
                     api.defaults.headers.common.authorization = `Bearer ${token}`;
 
                     const { data } = await api.get<iUser>(`/users/${user_id}`)

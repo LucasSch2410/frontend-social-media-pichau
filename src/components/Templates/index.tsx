@@ -26,26 +26,31 @@ export default function Templates() {
     }
 
     async function sendFiles() {
-        for (const key in file) {
-            const value = (file as any)[key]
-
-            if (value != null){
-                const formData = new FormData()
-                formData.append('file', value.files[0])
-
-                await api.put(`/images/templates/upload/${value.name}`, formData)
-                .then(() => {
-                    toast.success(`Template ${value.name} alterado!`)
-                })
-                .catch((error: any) => (
-                    handleApiError(error, `Erro ao trocar o template ${value.name}.`)
-                ))
-                .finally(() => {
-                    setUrl((prevUrl) => ({...prevUrl, [value.name]: null}))
-                    setFile((prevFile) => ({...prevFile, [value.name]: null}))
-                })
+        try {
+            for (const key in file) {
+                const value = (file as any)[key]
+    
+                if (value != null){
+                    const formData = new FormData()
+                    formData.append('file', value.files[0])
+    
+                    await api.put(`/images/templates/upload/${value.name}`, formData)
+                    .then(() => {
+                        toast.success(`Template ${value.name} alterado!`)
+                    })
+                    .catch((error: any) => (
+                        handleApiError(error, `Erro ao trocar o template ${value.name}.`)
+                    ))
+                    .finally(() => {
+                        setUrl((prevUrl) => ({...prevUrl, [value.name]: null}))
+                        setFile((prevFile) => ({...prevFile, [value.name]: null}))
+                    })
+                }
             }
+        } finally {
+            window.location.reload();
         }
+
     }
 
     return (    
