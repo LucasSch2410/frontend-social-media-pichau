@@ -4,5 +4,9 @@ import { useGlobalContext } from "../../context/GlobalContext";
 export const ProtectedRoutes = () => {
   const { user } = useGlobalContext();
 
-  return user ? <Navigate to="/" replace /> : <Navigate to="/" replace />;
+  if (user){
+    return <Outlet />
+  } else {
+    return <Navigate to="/" />
+  }
 };
