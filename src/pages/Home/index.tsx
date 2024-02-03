@@ -30,6 +30,7 @@ export const Home = () => {
         sheetLoading,
         setSheetLoading
     } = useGlobalContext();
+
     const [timePreview, setPreview] = useState(0)
     const [counterProductDownload, setProductDownload] = useState(0)
     const socialTypes = ['stories', 'wide', 'push', 'post']
@@ -181,9 +182,7 @@ export const Home = () => {
     return (
         <main className='h-full min-h-screen lg:h-screen bg-zinc-950 text-zinc-300 lg:grid lg:grid-cols-12 lg:grid-rows-12'>
 
-            <Templates/>
-            
-
+            <Templates />
 
             <div className='flex flex-col items-center justify-center
                 pt-10 lg:pt-0 lg:col-start-5 lg:col-span-4 lg:row-start-4 lg:row-span-6'>
@@ -204,7 +203,7 @@ export const Home = () => {
                         />
                     </div>
                     <div className="card m-auto">
-                        {sheetLoading.button ? (
+                        { sheetLoading.button ? (
                             <Button className='w-80 flex justify-center border-none cursor-not-allowed bg-white' disabled>
                                 <ThreeDots color='#000000' height={35} />
                             </Button>
@@ -215,23 +214,23 @@ export const Home = () => {
                 </form>
             </div>
 
-            {products ? <div className='products-list lg:col-start-9 lg:col-span-4 lg:row-start-1 lg:row-span-6
-                  bg-neutral-900 mt-20 h-80 m-auto w-5/6 lg:h-5/6 p-5 rounded overflow-auto border-r-0'>{
-                    products.map((product) =>
-                        <div key={product.key} className='pb-10 flex'>
-                            <p className='w-5/6 text-justify'>{product.product}</p>
-                            {product.loading && (
-                                <TailSpin height={30} strokeWidth={7} color='#FFFFFF' />
-                            )}
-                        </div>
-                    )
-                }
-            </div>
-                : ""}
+            { products ? (
+                <div className='products-list lg:col-start-9 lg:col-span-4 lg:row-start-1 lg:row-span-6
+                    bg-neutral-900 mt-20 h-80 m-auto w-5/6 lg:h-5/6 p-5 rounded overflow-auto border-r-0'>
+                        { products.map((product) =>
+                            <div key={product.key} className='pb-10 flex'>
+                                <p className='w-5/6 text-justify'>{product.product}</p>
+                                { product.loading && (
+                                    <TailSpin height={30} strokeWidth={7} color='#FFFFFF' />
+                                )}
+                            </div>
+                        )}
+                </div>
+            ) : ""}
 
-            {products ?
+            { products ? (
                 <div className='m-auto py-20 lg:py-0 grid grid-cols-2 w-5/6 lg:col-start-9 lg:col-span-4 gap-6 lg:row-start-8 box-border'>
-                    {sheetLoading.images ? (
+                    { sheetLoading.images ? (
                         <>
                             <>
                                 <Button className='h-16 col-span-1 cursor-not-allowed border-none' disabled>Stories</Button>
@@ -257,15 +256,15 @@ export const Home = () => {
                             </>
                         </>
                     )}
-                    {timePreview > 1 && (
+                    { timePreview > 1 && (
                         <div className='col-span-2'>
                             <p>Tempo restante previsto: {Math.round((((timePreview / counterProductDownload) * products!.length) - timePreview) / 1000)} segundos </p>
                         </div>
                     )}
                 </div>
-                : ""}
+            ) : ""}
 
-            {downloadReady && sheetLoading.images === false && (
+            { downloadReady && sheetLoading.images === false && (
                 <div className='flex justify-center col-start-5 col-span-4 row-start-11'>
                     {sheetLoading.download ? (
                         <Button disabled className='flex justify-center items-center w-2/6 bg-white cursor-not-allowed'>

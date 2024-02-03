@@ -23,7 +23,6 @@ export default function Templates() {
     async function fileSelected(event: any) {
         setFile((prevFile) => ({...prevFile, [event.target.name]: event.target}))
         setUrl((prevUrl) => ({...prevUrl, [event.target.name]: URL.createObjectURL(event.target.files[0])}));
-
     }
 
     async function sendFiles() {
@@ -38,7 +37,9 @@ export default function Templates() {
                 .then(() => {
                     toast.success(`Template ${value.name} alterado!`)
                 })
-                .catch((error: any) => (handleApiError(error, `Erro ao trocar o template ${value.name}.`)))
+                .catch((error: any) => (
+                    handleApiError(error, `Erro ao trocar o template ${value.name}.`)
+                ))
                 .finally(() => {
                     setUrl((prevUrl) => ({...prevUrl, [value.name]: null}))
                     setFile((prevFile) => ({...prevFile, [value.name]: null}))
@@ -168,17 +169,13 @@ export default function Templates() {
             </div>
         </div>
 
-    { (url.stories || url.post || url.push || url.wide != null) &&                 
+    {(url.stories || url.post || url.push || url.wide != null) &&                 
         <div className="flex justify-center">
             <Button className="text-black bg-white hover:bg-black hover:text-white" onClick={() => sendFiles()}>
                 Trocar templates
             </Button>
         </div>
     }
-
+    
     </div>
-
-
-    
-    
 )}
