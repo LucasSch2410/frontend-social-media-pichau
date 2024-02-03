@@ -3,8 +3,10 @@ import React, {
     useState,
     createContext,
     useContext,
+    useEffect,
 } from "react";
 
+import Cookies from "js-cookie";
 import { api } from "../services/api";
 import { iLogin, Login } from "../services/Login";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +17,8 @@ interface iGlobalContext {
     setUser: React.Dispatch<React.SetStateAction<iUser | null>>;
     dbxToken: string | null;
     setDbxToken: React.Dispatch<React.SetStateAction<string>>;
+    pageLoading: boolean;
+    setPageLoading: React.Dispatch<React.SetStateAction<boolean>>;
     sheetLoading: iSheetLoading;
     setSheetLoading: React.Dispatch<React.SetStateAction<iSheetLoading>>;
     submitLogin({ username, password }: iLogin): void;
@@ -42,10 +46,40 @@ export const GlobalContext = createContext<iGlobalContext>({} as iGlobalContext)
 export const GlobalProvider = ({ children }: iGlobalContextProps) => {
     const [user, setUser] = useState<iUser | null>(null);
     const [dbxToken, setDbxToken] = useState('');
+    const [pageLoading, setPageLoading] = useState(false)
     const [sheetLoading, setSheetLoading] = useState<iSheetLoading>({button: false, download:false, images: false});
     const [buttonLoading, setButtonLoading] = useState(false);
     
     const navigate = useNavigate()
+
+    useEffect(() => {
+
+        async function load(){
+
+            const token = Cookies.get('jwt_token')
+            const dbx_token = Cookies.get('dbx_token')
+            const user_id = Cookies.get('user_id')
+
+            if (token) {
+                try {
+                    setPageLoading(true)
+                    setUser(undefined)
+                    api.defaults.headers.common.authorization = `Bearer ${token}`;
+
+                    const { data } = await api.get<iUser>(`/users/${user_id}`)
+                    setUser(data)
+                    setDbxToken(dbx_token)
+
+                    navigate("/home")
+                } catch (error) {
+                    handleApiError(error, "Não foi possível acessar!")
+                } finally {
+                    setPageLoading(false)
+                }
+            }
+        }
+        load()
+    }, [navigate])
 
     const submitLogin = async ({ username, password }: iLogin) => {
         const userLogin = { username, password };
@@ -57,6 +91,9 @@ export const GlobalProvider = ({ children }: iGlobalContextProps) => {
             setDbxToken(data.dropbox_token);
 
             api.defaults.headers.common.authorization = `Bearer ${data.access_token}`;
+            Cookies.set('jwt_token', data.access_token, { expires: 0.1 })
+            Cookies.set('dbx_token', data.dropbox_token, { expires: 0.1 })
+            Cookies.set('user_id', data.user.id, { expires: 0.1})
 
             navigate("/home")
         } catch (error: any) {
@@ -73,6 +110,8 @@ export const GlobalProvider = ({ children }: iGlobalContextProps) => {
                 setUser,
                 dbxToken,
                 setDbxToken,
+                pageLoading,
+                setPageLoading,
                 buttonLoading,
                 setButtonLoading,
                 sheetLoading,
