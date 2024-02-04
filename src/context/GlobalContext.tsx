@@ -67,7 +67,7 @@ export const GlobalProvider = ({ children }: iGlobalContextProps) => {
                     setUser(data)
                     setDbxToken(dbx_token)
 
-                    navigate("/home")
+                    navigate("/home", { replace: true })
                 } catch (error) {
                     handleApiError(error, "Não foi possível acessar!")
                 } finally {
