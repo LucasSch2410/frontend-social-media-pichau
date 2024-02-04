@@ -61,7 +61,7 @@ export const GlobalProvider = ({ children }: iGlobalContextProps) => {
             if (token && dbx_token) {
                 try {
                     setPageLoading(true)
-                    api.defaults.headers.common.authorization = `Bearer ${token}`;
+                    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
                     const { data } = await api.get<iUser>(`/users/${user_id}`)
                     setUser(data)
