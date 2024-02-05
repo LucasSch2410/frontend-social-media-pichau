@@ -37,11 +37,11 @@ export default function Templates() {
                 .then(() => {
                     toast.success(`Template ${value.name} alterado!`)
                 })
-                .catch((error: any) => (
-                    handleApiError(error, `Erro ao trocar o template ${value.name}.`)
-                ))
-                .finally(() => {
+                .catch((error: any) => {
                     setUrl((prevUrl) => ({...prevUrl, [value.name]: null}))
+                    handleApiError(error, `Erro ao trocar o template ${value.name}.`)
+                })
+                .finally(() => {
                     setFile((prevFile) => ({...prevFile, [value.name]: null}))
                 })
             }
@@ -62,7 +62,7 @@ export default function Templates() {
                         { url.stories ? (
                             <a href={url.stories} target="_blank">         
                                 <img className="relative w-40" src={url.stories} alt=""/>
-                                <p className="text-white text-center">preview</p>
+                                {(file.stories == null && url.stories) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
                             <a href="https://backend-social-media-pichau.onrender.com/images/templates/stories" target="_blank">
@@ -91,7 +91,7 @@ export default function Templates() {
                     { url.push ? (
                             <a href={url.push} target="_blank">         
                                 <img className="relative w-40" src={url.push} alt=""/>
-                                <p className="text-white text-center">preview</p>
+                                {(file.push == null && url.push) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
                             <a href="https://backend-social-media-pichau.onrender.com/images/templates/push" target="_blank">
@@ -120,7 +120,7 @@ export default function Templates() {
                     { url.post ? (
                             <a href={url.post} target="_blank">         
                                 <img className="relative w-40" src={url.post} alt=""/>
-                                <p className="text-white text-center">preview</p>
+                                {(file.post == null && url.post) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
                             <a href="https://backend-social-media-pichau.onrender.com/images/templates/post" target="_blank">
@@ -149,7 +149,7 @@ export default function Templates() {
                     { url.wide ? (
                             <a href={url.wide} target="_blank">         
                                 <img className="relative w-40" src={url.wide} alt=""/>
-                                <p className="text-white text-center">preview</p>
+                                {(file.wide == null && url.wide) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
                             <a href="https://backend-social-media-pichau.onrender.com/images/templates/wide" target="_blank">
@@ -169,7 +169,7 @@ export default function Templates() {
             </div>
         </div>
 
-    {(url.stories || url.post || url.push || url.wide != null) &&                 
+    {(file.stories || file.post || file.push || file.wide != null) &&                 
         <div className="flex justify-center">
             <Button className="text-black bg-white hover:bg-black hover:text-white" onClick={() => sendFiles()}>
                 Trocar templates
