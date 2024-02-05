@@ -5,6 +5,6 @@ export default function handleApiError(error: any, detail: string) {
         toast.error(error.response.data.detail);
     } else {
         toast.error(detail);
-        console.log(error)
     }
+    console.log(error)
 }
