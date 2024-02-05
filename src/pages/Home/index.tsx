@@ -267,11 +267,11 @@ export const Home = () => {
             { downloadReady && sheetLoading.images === false && (
                 <div className='flex justify-center col-start-5 col-span-4 row-start-11'>
                     {sheetLoading.download ? (
-                        <Button disabled className='flex justify-center items-center w-2/6 bg-white cursor-not-allowed'>
+                        <Button disabled className='flex justify-center items-center w-3/6 bg-white cursor-not-allowed'>
                             <ThreeDots color='#000000' />
                         </Button>
                     ) : (
-                        <Button className='w-2/6 bg-white text-black hover:bg-neutral-900 hover:text-white'
+                        <Button className='w-3/6 bg-white text-black hover:bg-neutral-900 hover:text-white'
                             onClick={() => requestDownload()}>
                             Download
                         </Button>

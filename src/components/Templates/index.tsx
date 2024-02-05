@@ -3,9 +3,11 @@ import { toast } from "react-toastify"
 import handleApiError from "../Error/handleApiError"
 import { useState } from "react"
 import Button from "../Button/Button"
+import { ThreeDots } from "react-loader-spinner"
 
 export default function Templates() {
 
+    const [loading, setLoading] = useState(false)
     const [file, setFile] = useState({
         stories: null,
         push: null,
@@ -26,25 +28,30 @@ export default function Templates() {
     }
 
     async function sendFiles() {
-        for (const key in file) {
-            const value = (file as any)[key]
-
-            if (value != null){
-                const formData = new FormData()
-                formData.append('file', value.files[0])
-
-                await api.put(`/images/templates/upload/${value.name}`, formData)
-                .then(() => {
-                    toast.success(`Template ${value.name} alterado!`)
-                })
-                .catch((error: any) => {
-                    setUrl((prevUrl) => ({...prevUrl, [value.name]: null}))
-                    handleApiError(error, `Erro ao trocar o template ${value.name}.`)
-                })
-                .finally(() => {
-                    setFile((prevFile) => ({...prevFile, [value.name]: null}))
-                })
+        setLoading(true)
+        try {
+            for (const key in file) {
+                const value = (file as any)[key]
+    
+                if (value != null){
+                    const formData = new FormData()
+                    formData.append('file', value.files[0])
+    
+                    await api.put(`/images/templates/upload/${value.name}`, formData)
+                    .then(() => {
+                        toast.success(`Template ${value.name} alterado!`)
+                    })
+                    .catch((error: any) => {
+                        setUrl((prevUrl) => ({...prevUrl, [value.name]: null}))
+                        handleApiError(error, `Erro ao trocar o template ${value.name}.`)
+                    })
+                    .finally(() => {
+                        setFile((prevFile) => ({...prevFile, [value.name]: null}))
+                    })
+                }
             }
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -169,13 +176,18 @@ export default function Templates() {
             </div>
         </div>
 
-    {(file.stories || file.post || file.push || file.wide != null) &&                 
+    {(file.stories || file.post || file.push || file.wide != null) && (
         <div className="flex justify-center">
-            <Button className="text-black bg-white hover:bg-black hover:text-white" onClick={() => sendFiles()}>
-                Trocar templates
-            </Button>
+            {loading ? (
+                <Button disabled className='flex justify-center items-center w-3/6 h-16 bg-white cursor-not-allowed'>
+                    <ThreeDots height={25} color='#000000' />
+                </Button>
+            ) : (
+                <Button className="text-black bg-white w-3/6 h-16 hover:bg-black hover:text-white" onClick={() => sendFiles()}>
+                    Trocar templates
+                </Button>
+            )}
         </div>
-    }
-    
+    )}
     </div>
 )}
