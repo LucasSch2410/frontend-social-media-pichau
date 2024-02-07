@@ -69,7 +69,7 @@ export const Home = () => {
         setSheetLoading({ ...sheetLoading, images: true })
 
         try {
-            await api.delete(`/images/${user?.id}/${typeSocial}`)
+            await api.delete(`images/${user?.id}/${typeSocial}`)
 
             for (const product of products!) {
                 updateProductState(product.key, { loading: true });
@@ -95,13 +95,9 @@ export const Home = () => {
                     });
             }
         } finally {
-            if (counterProductDownload < 1) {
-                toast.error('Nenhuma imagem foi criada, verificar as informações na planilha.')
-            } else {
-                toast.success(`As imagens foram produzidas, download disponível.`)
-                setTypeSocial(typeSocial)
-                setDownload(true)
-            }
+            toast.success(`As imagens foram produzidas, download disponível.`)
+            setTypeSocial(typeSocial)
+            setDownload(true)
             setSheetLoading({ ...sheetLoading, images: false })
             setPreview(0)
             setProductDownload(0)
@@ -118,7 +114,7 @@ export const Home = () => {
                 const start: number = new Date().getTime()
 
                 for (const typeSocial of socialTypes) {
-                    await api.delete(`/images/${user?.id}/${typeSocial}`)
+                    await api.delete(`images/${user?.id}/${typeSocial}`)
 
                     await api.post('/images/create', {
                         access_token: dbxToken,
