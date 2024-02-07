@@ -76,8 +76,8 @@ export default function Templates() {
                                 {(file.stories == null && url.stories) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
-                            <a href="http://127.0.0.1:8000/images/templates/2/stories" target="_blank">
-                                <img className="relative w-40" src="http://127.0.0.1:8000/images/templates/2/stories" alt=""/>
+                            <a href={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} target="_blank">
+                                <img className="relative w-40" src={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} alt=""/>
                             </a> 
                         )}
                 </div>
@@ -105,8 +105,8 @@ export default function Templates() {
                                 {(file.push == null && url.push) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
-                            <a href="https://backend-social-media-pichau.onrender.com/images/templates/push" target="_blank">
-                                <img className="relative w-40" src="https://backend-social-media-pichau.onrender.com/images/templates/push" alt=""/>
+                            <a href={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} target="_blank">
+                                <img className="relative w-40" src={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} alt=""/>
                             </a> 
                         )}
                 </div>
@@ -134,8 +134,8 @@ export default function Templates() {
                                 {(file.post == null && url.post) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
-                            <a href="https://backend-social-media-pichau.onrender.com/images/templates/post" target="_blank">
-                                <img className="relative w-40" src="https://backend-social-media-pichau.onrender.com/images/templates/post" alt=""/>
+                            <a href={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} target="_blank">
+                                <img className="relative w-40" src={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} alt=""/>
                             </a> 
                         )}
                 </div>
@@ -163,8 +163,8 @@ export default function Templates() {
                                 {(file.wide == null && url.wide) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
-                            <a href="https://backend-social-media-pichau.onrender.com/images/templates/wide" target="_blank">
-                                <img className="relative w-40" src="https://backend-social-media-pichau.onrender.com/images/templates/wide" alt=""/>
+                            <a href={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} target="_blank">
+                                <img className="relative w-40" src={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} alt=""/>
                             </a> 
                         )}
                 </div>
