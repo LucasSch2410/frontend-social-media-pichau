@@ -4,8 +4,12 @@ import handleApiError from "../Error/handleApiError"
 import { useState } from "react"
 import Button from "../Button/Button"
 import { ThreeDots } from "react-loader-spinner"
+import { useGlobalContext } from "../../context/GlobalContext"
 
 export default function Templates() {
+    const {
+        user
+    } = useGlobalContext();
 
     const [loading, setLoading] = useState(false)
     const [file, setFile] = useState({
@@ -37,7 +41,7 @@ export default function Templates() {
                     const formData = new FormData()
                     formData.append('file', value.files[0])
     
-                    await api.put(`/images/templates/upload/${value.name}`, formData)
+                    await api.put(`/images/templates/upload/${user?.id}/${value.name}`, formData)
                     .then(() => {
                         toast.success(`Template ${value.name} alterado!`)
                     })
@@ -72,8 +76,8 @@ export default function Templates() {
                                 {(file.stories == null && url.stories) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
-                            <a href="https://backend-social-media-pichau.onrender.com/images/templates/stories" target="_blank">
-                                <img className="relative w-40" src="https://backend-social-media-pichau.onrender.com/images/templates/stories" alt=""/>
+                            <a href="http://127.0.0.1:8000/images/templates/2/stories" target="_blank">
+                                <img className="relative w-40" src="http://127.0.0.1:8000/images/templates/2/stories" alt=""/>
                             </a> 
                         )}
                 </div>

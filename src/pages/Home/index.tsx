@@ -109,13 +109,15 @@ export const Home = () => {
         setSheetLoading({ ...sheetLoading, images: true })
 
         try {
+            for (const typeSocial of socialTypes){
+                await api.delete(`images/${user?.id}/${typeSocial}`)
+            }
+
             for (const product of products!) {
                 updateProductState(product.key, { loading: true });
                 const start: number = new Date().getTime()
 
                 for (const typeSocial of socialTypes) {
-                    await api.delete(`images/${user?.id}/${typeSocial}`)
-
                     await api.post('/images/create', {
                         access_token: dbxToken,
                         product_name: product.product,
