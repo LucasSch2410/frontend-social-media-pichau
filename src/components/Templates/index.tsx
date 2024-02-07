@@ -1,7 +1,7 @@
 import { api } from "../../services/api"
 import { toast } from "react-toastify"
 import handleApiError from "../Error/handleApiError"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Button from "../Button/Button"
 import { ThreeDots } from "react-loader-spinner"
 import { useGlobalContext } from "../../context/GlobalContext"
@@ -12,6 +12,13 @@ export default function Templates() {
     } = useGlobalContext();
 
     const [loading, setLoading] = useState(false)
+    const [templates, setTemplates] = useState({
+        stories: 'https://backend-social-media-pichau.onrender.com/images/static/templates/stories',
+        push: 'https://backend-social-media-pichau.onrender.com/images/static/templates/push',
+        post: 'https://backend-social-media-pichau.onrender.com/images/static/templates/post',
+        wide: 'https://backend-social-media-pichau.onrender.com/images/static/templates/wide'
+    })
+
     const [file, setFile] = useState({
         stories: null,
         push: null,
@@ -59,6 +66,24 @@ export default function Templates() {
         }
     }
 
+    async function get_templates() {
+        for (const temp in templates){
+            await api.get(`/images/templates/${user?.id}/${temp}`)
+            .then((res) => {
+                if (res.data != null) {
+                    setTemplates((prevTemp) => ({...prevTemp, [temp]: res.data}))
+                }
+            })
+            .catch((error) => {
+                handleApiError(error, `Erro ao carregar os templates.`)
+            })
+        }
+    }
+
+    useEffect(()=>{
+        get_templates()
+    }, [])
+
     return (    
     
     <div className="lg:col-start-1 lg:col-span-4 lg:row-span-12 lg:row-start-1 lg:row-end-13 flex flex-col align-middle justify-center">
@@ -76,8 +101,8 @@ export default function Templates() {
                                 {(file.stories == null && url.stories) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
-                            <a href={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} target="_blank">
-                                <img className="relative w-40" src={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} alt=""/>
+                            <a href={templates.stories} target="_blank">
+                                <img className="relative w-40" src={templates.stories} alt=""/>
                             </a> 
                         )}
                 </div>
@@ -105,8 +130,8 @@ export default function Templates() {
                                 {(file.push == null && url.push) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
-                            <a href={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} target="_blank">
-                                <img className="relative w-40" src={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} alt=""/>
+                            <a href={templates.push} target="_blank">
+                                <img className="relative w-40" src={templates.push} alt=""/>
                             </a> 
                         )}
                 </div>
@@ -134,8 +159,8 @@ export default function Templates() {
                                 {(file.post == null && url.post) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
-                            <a href={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} target="_blank">
-                                <img className="relative w-40" src={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} alt=""/>
+                            <a href={templates.post} target="_blank">
+                                <img className="relative w-40" src={templates.post} alt=""/>
                             </a> 
                         )}
                 </div>
@@ -163,8 +188,8 @@ export default function Templates() {
                                 {(file.wide == null && url.wide) ? "" : <p className="text-white text-center">preview</p>}
                             </a>
                         ) : (
-                            <a href={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} target="_blank">
-                                <img className="relative w-40" src={`https://backend-social-media-pichau.onrender.com/images/templates/${user?.id}/stories`} alt=""/>
+                            <a href={templates.wide} target="_blank">
+                                <img className="relative w-40" src={templates.wide} alt=""/>
                             </a> 
                         )}
                 </div>
